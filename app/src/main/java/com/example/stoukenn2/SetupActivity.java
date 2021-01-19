@@ -43,6 +43,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     protected void onResume(){
         super.onResume();
         Globals globals=(Globals)this.getApplication();
+        //ナビゲーションバーの非表示
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
         //ボタンの宣言
         Button returnButton = findViewById(R.id.button26);
         Button sendButton_assigned_letter_11 = findViewById(R.id.button27);
@@ -58,20 +61,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         Button sendButton_assigned_letter_7 = findViewById(R.id.button32);
         Button sendButton_assigned_letter_8 = findViewById(R.id.button33);
         sendButton_assigned_letter_11.setText("Letter1"+"["+globals.assigned_button_letter_11+"]");
-        sendButton_assigned_letter_12.setText("Letter1"+"["+globals.assigned_button_letter_12+"]");
+        sendButton_assigned_letter_12.setText("Letter2"+"["+globals.assigned_button_letter_12+"]");
         sendButton_assigned_letter_21.setText("Letter1"+"["+globals.assigned_button_letter_21+"]");
-        sendButton_assigned_letter_22.setText("Letter1"+"["+globals.assigned_button_letter_22+"]");
+        sendButton_assigned_letter_22.setText("Letter2"+"["+globals.assigned_button_letter_22+"]");
         sendButton_assigned_letter_31.setText("Letter1"+"["+globals.assigned_button_letter_31+"]");
-        sendButton_assigned_letter_32.setText("Letter1"+"["+globals.assigned_button_letter_32+"]");
+        sendButton_assigned_letter_32.setText("Letter2"+"["+globals.assigned_button_letter_32+"]");
         sendButton_assigned_letter_41.setText("Letter1"+"["+globals.assigned_button_letter_41+"]");
-        sendButton_assigned_letter_42.setText("Letter1"+"["+globals.assigned_button_letter_42+"]");
+        sendButton_assigned_letter_42.setText("Letter2"+"["+globals.assigned_button_letter_42+"]");
         sendButton_assigned_letter_5.setText("Letter"+"["+globals.assigned_button_letter_5+"]");
         sendButton_assigned_letter_6.setText("Letter"+"["+globals.assigned_button_letter_6+"]");
         sendButton_assigned_letter_7.setText("Letter"+"["+globals.assigned_button_letter_7+"]");
         sendButton_assigned_letter_8.setText("Letter"+"["+globals.assigned_button_letter_8+"]");
-        //ナビゲーションバーの非表示
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
         //ここから色判定用のボタンの感知
         findViewById(R.id.button).setOnClickListener(this);
         findViewById(R.id.button3).setOnClickListener(this);
@@ -158,7 +158,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         sendButton_assigned_letter_5.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                globals.assigned_button_number=5;
+                globals.assigned_button_number=8;
                 intent_assigned_letter();
 
             }
@@ -166,7 +166,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         sendButton_assigned_letter_6.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                globals.assigned_button_number=6;
+                globals.assigned_button_number=7;
                 intent_assigned_letter();
 
             }
@@ -174,7 +174,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         sendButton_assigned_letter_7.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                globals.assigned_button_number=7;
+                globals.assigned_button_number=5;
                 intent_assigned_letter();
 
             }
@@ -182,7 +182,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         sendButton_assigned_letter_8.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                globals.assigned_button_number=8;
+                globals.assigned_button_number=6;
                 intent_assigned_letter();
 
             }
@@ -298,25 +298,25 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 globals.collarButton_assigned_number_1=11;
                 init_style(1);
                 collarButton_assigned_number(globals.collarButton_assigned_number_1);
-                globals.collarButton1 = "#AFA690";
+                globals.collarButton1 = "#7967c3";
                 break;
             case R.id.button11:
                 init_style(2);
                 globals.collarButton_assigned_number_2=21;
                 collarButton_assigned_number(globals.collarButton_assigned_number_2);
-                globals.collarButton2 = "#AFA690";
+                globals.collarButton2 = "#7967c3";
                 break;
             case R.id.button12:
                 init_style(3);
                 globals.collarButton_assigned_number_3=31;
                 collarButton_assigned_number(globals.collarButton_assigned_number_3);
-                globals.collarButton3 = "#AFA690";
+                globals.collarButton3 = "#7967c3";
                 break;
             case R.id.button13:
                 init_style(4);
                 globals.collarButton_assigned_number_4=41;
                 collarButton_assigned_number(globals.collarButton_assigned_number_4);
-                globals.collarButton4 = "#AFA690";
+                globals.collarButton4 = "#7967c3";
                 break;
             //次の色
             case R.id.button3:

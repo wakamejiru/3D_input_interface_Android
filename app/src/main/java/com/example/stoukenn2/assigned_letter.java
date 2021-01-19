@@ -61,6 +61,9 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
     }
     protected void onResume(){
         super.onResume();
+        //ナビゲーションバーの非表示
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
         Button return_SETUP = findViewById(R.id.button139);
         findViewById(R.id.button40).setOnClickListener(this);
         findViewById(R.id.button42).setOnClickListener(this);
@@ -1064,7 +1067,7 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.button131:
                 globals.provisional_Assigned_button = 66;
-                globals.provisional_Assigned_button_letter = "＼";
+                globals.provisional_Assigned_button_letter = "_";
                 assigned_button_number();
                 color_paint_eraser();
                 break;
@@ -1106,25 +1109,25 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.button136:
                 globals.provisional_Assigned_button = 73;
-                globals.provisional_Assigned_button_letter = "↑";
+                globals.provisional_Assigned_button_letter = "up";
                 assigned_button_number();
                 color_paint_eraser();
                 break;
             case R.id.button135:
                 globals.provisional_Assigned_button = 74;
-                globals.provisional_Assigned_button_letter = "↓";
+                globals.provisional_Assigned_button_letter = "down";
                 assigned_button_number();
                 color_paint_eraser();
                 break;
             case R.id.button137:
                 globals.provisional_Assigned_button = 76;
-                globals.provisional_Assigned_button_letter = "→";
+                globals.provisional_Assigned_button_letter = "right";
                 assigned_button_number();
                 color_paint_eraser();
                 break;
             case R.id.button138:
                 globals.provisional_Assigned_button = 75;
-                globals.provisional_Assigned_button_letter = "←";
+                globals.provisional_Assigned_button_letter = "left";
                 assigned_button_number();
                 color_paint_eraser();
                 break;
@@ -1217,7 +1220,7 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                     globals.paint_button_color_id=globals.provisional_Assigned_button;
                     globals.assigned_button_forward=globals.provisional_Assigned_button;
                 }
-                globals.assigned_button_letter_5=globals.provisional_Assigned_button_letter;
+                globals.assigned_button_letter_7=globals.provisional_Assigned_button_letter;
                 globals.assigned_button_forward=globals.provisional_Assigned_button;
                 break;
             case 6:
@@ -1226,7 +1229,7 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                     globals.paint_button_color_id=globals.provisional_Assigned_button;
                     globals.assigned_button_back=globals.provisional_Assigned_button;
                 }
-                globals.assigned_button_letter_6=globals.provisional_Assigned_button_letter;
+                globals.assigned_button_letter_8=globals.provisional_Assigned_button_letter;
                 globals.assigned_button_back=globals.provisional_Assigned_button;
                 break;
             case 7:
@@ -1235,7 +1238,7 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                     globals.paint_button_color_id=globals.provisional_Assigned_button;
                     globals.assigned_button_right=globals.provisional_Assigned_button;
                 }
-                globals.assigned_button_letter_7=globals.provisional_Assigned_button_letter;
+                globals.assigned_button_letter_6=globals.provisional_Assigned_button_letter;
                 globals.assigned_button_right=globals.provisional_Assigned_button;
                 break;
             case 8:
@@ -1244,7 +1247,7 @@ public class assigned_letter extends AppCompatActivity implements View.OnClickLi
                     globals.paint_button_color_id=globals.provisional_Assigned_button;
                     globals.assigned_button_left=globals.provisional_Assigned_button;
                 }
-                globals.assigned_button_letter_8=globals.provisional_Assigned_button_letter;
+                globals.assigned_button_letter_5=globals.provisional_Assigned_button_letter;
                 globals.assigned_button_left=globals.provisional_Assigned_button;
                 break;
         }

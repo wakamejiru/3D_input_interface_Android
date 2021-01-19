@@ -21,12 +21,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -40,6 +44,8 @@ import static android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
 import static android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_STARTED;
 import static android.bluetooth.BluetoothDevice.ACTION_FOUND;
 import static android.bluetooth.BluetoothDevice.ACTION_NAME_CHANGED;
+import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
+import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     //センサ関連の変数宣言
@@ -51,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float[] attitude = new float[3];
     private float[] attitude_first = new float[3];
     public static String msg=null;
+    private Timer timer1;
+    //タイマー秒数
+    private Handler handler1;
 
     SensorManager sManager;
     /*センサー関係変数定義*/
@@ -73,12 +82,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     BluetoothTask bluetoothTask=new BluetoothTask();
     //データの作成
     //String[] Data=new String[9];
+    // X軸最低スワイプ距離
+    private static final int SWIPE_MIN_DISTANCE = 50;
 
+    // X軸最低スワイプスピード
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    // Y軸の移動距離　これ以上なら横移動を判定しない
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //データ転送
+        timer1=new Timer();
+        handler1=new Handler();
         setContentView(R.layout.activity_main);
         globals = (Globals) this.getApplication();
         Globals.globalContext = getApplication();
@@ -89,71 +108,112 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Button button2 = findViewById(R.id.button4);
         Button button3 = findViewById(R.id.button8);
         Button button4 = findViewById(R.id.button7);
-        button1.setOnTouchListener(new Button.OnTouchListener(){
+        Button button5 = findViewById(R.id.button56);
+        Button button6 = findViewById(R.id.button57);
+        button1.setOnTouchListener(new Button.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         globals.button_state_1_1 = globals.assigned_button_letter_11;
-                        globals.button_state_1_2=globals.assigned_button_letter_12;
+                        globals.button_state_1_2 = globals.assigned_button_letter_12;
                         break;
                     case MotionEvent.ACTION_UP:
-                        globals.button_state_1_1 = "dis_"+globals.assigned_button_letter_11;
-                        globals.button_state_1_2 = "dis_"+globals.assigned_button_letter_12;
+                        globals.button_state_1_1 = "dis_" + globals.assigned_button_letter_11;
+                        globals.button_state_1_2 = "dis_" + globals.assigned_button_letter_12;
                         break;
                 }
                 return false;
             }
         });
-        button2.setOnTouchListener(new Button.OnTouchListener(){
+        button2.setOnTouchListener(new Button.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN: globals.button_state_2_1 = globals.assigned_button_letter_21;
-                        globals.button_state_2_2=globals.assigned_button_letter_22;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        globals.button_state_2_1 = globals.assigned_button_letter_21;
+                        globals.button_state_2_2 = globals.assigned_button_letter_22;
                         break;
                     case MotionEvent.ACTION_UP:
-                        globals.button_state_2_1 =  "dis_"+globals.assigned_button_letter_21;
-                        globals.button_state_2_2 =  "dis_"+globals.assigned_button_letter_22;
+                        globals.button_state_2_1 = "dis_" + globals.assigned_button_letter_21;
+                        globals.button_state_2_2 = "dis_" + globals.assigned_button_letter_22;
                         break;
                 }
                 return false;
             }
         });
-        button3.setOnTouchListener(new Button.OnTouchListener(){
+        button3.setOnTouchListener(new Button.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN: globals.button_state_3_1 = globals.assigned_button_letter_31;
-                        globals.button_state_3_2=globals.assigned_button_letter_32;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        globals.button_state_3_1 = globals.assigned_button_letter_31;
+                        globals.button_state_3_2 = globals.assigned_button_letter_32;
                         break;
                     case MotionEvent.ACTION_UP:
-                        globals.button_state_3_1 =  "dis_"+globals.assigned_button_letter_31;
-                        globals.button_state_3_2 =  "dis_"+globals.assigned_button_letter_32;
+                        globals.button_state_3_1 = "dis_" + globals.assigned_button_letter_31;
+                        globals.button_state_3_2 = "dis_" + globals.assigned_button_letter_32;
                         break;
                 }
                 return false;
             }
         });
-        button4.setOnTouchListener(new Button.OnTouchListener(){
+        button4.setOnTouchListener(new Button.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN: globals.button_state_4_1 = globals.assigned_button_letter_41;
-                        globals.button_state_4_2=globals.assigned_button_letter_42;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        globals.button_state_4_1 = globals.assigned_button_letter_41;
+                        globals.button_state_4_2 = globals.assigned_button_letter_42;
                         break;
                     case MotionEvent.ACTION_UP:
-                        globals.button_state_4_1 =  "dis_"+globals.assigned_button_letter_41;
-                        globals.button_state_4_2 =  "dis_"+globals.assigned_button_letter_42;
+                        globals.button_state_4_1 = "dis_" + globals.assigned_button_letter_41;
+                        globals.button_state_4_2 = "dis_" + globals.assigned_button_letter_42;
                         break;
                 }
                 return false;
             }
         });
+        button5.setOnTouchListener(new Button.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        globals.button_state_9="M_up";
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        globals.button_state_9=null;
+                        break;
+                }
+                return false;
+            }
+        });
+        button6.setOnTouchListener(new Button.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        globals.button_state_9="M_down";
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        globals.button_state_9=null;
+                        break;
+                }
+                return false;
+            }
+        });
+        timer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                senddata();
+            }
+        },0,100);
     }
     @SuppressWarnings("deprecation")
     @Override
@@ -162,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bluetoothTask.init();
         showDialog(DEVICES_DIALOG);
         View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        decor.setSystemUiVisibility(SYSTEM_UI_FLAG_HIDE_NAVIGATION | SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
         Button button1 = findViewById(R.id.button6);
         Button button2 = findViewById(R.id.button4);
         Button button3 = findViewById(R.id.button8);
@@ -187,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         // Listenerを解除
         //bluetoothTask.doClose();
+        bluetoothTask.doClose();
         sManager.unregisterListener((SensorEventListener) this);
     }
     private void StartOperation() {
@@ -206,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        bluetoothTask.doClose();
         sManager.unregisterListener(this);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -290,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             attitude[0]=0;
             attitude[1]=0;
             attitude[2]=0;
-            senddata();
+            //senddata();
         }
     }
 
@@ -304,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     public void senddata() {
             msg = globals.button_state_1_1 + "#" + globals.button_state_1_2 + "#" + globals.button_state_2_1 + "#" + globals.button_state_2_2 + "#" + globals.button_state_3_1 + "#" + globals.button_state_3_2 + "#" + globals.button_state_4_1 + "#" + globals.button_state_4_2 + "#" + globals.button_state_5 + "#" + globals.button_state_6 + "#" + globals.button_state_7 + "#" + globals.button_state_8;
-            bluetoothTask.doSend(globals.button_state_1_1 + "#" + globals.button_state_1_2 + "#" + globals.button_state_2_1 + "#" + globals.button_state_2_2 + "#" + globals.button_state_3_1 + "#" + globals.button_state_3_2 + "#" + globals.button_state_4_1 + "#" + globals.button_state_4_2 + "#" + globals.button_state_5 + "#" + globals.button_state_6 + "#" + globals.button_state_7 + "#" + globals.button_state_8+ "#");
+            bluetoothTask.doSend(globals.button_state_1_1 + "#" + globals.button_state_1_2 + "#" + globals.button_state_2_1 + "#" + globals.button_state_2_2 + "#" + globals.button_state_3_1 + "#" + globals.button_state_3_2 + "#" + globals.button_state_4_1 + "#" + globals.button_state_4_2 + "#" + globals.button_state_5 + "#" + globals.button_state_6 + "#" + globals.button_state_7 + "#" + globals.button_state_8+ "#"+ globals.button_state_9+ "#");
 
     }
 
@@ -337,6 +399,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alertDialogBuilder.create();
         return alertDialogBuilder.create();
     }
+
+
+
+
 }
 
 
